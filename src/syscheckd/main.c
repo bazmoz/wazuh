@@ -94,11 +94,6 @@ int main(int argc, char **argv)
         merror_exit(SETGID_ERROR, group, errno, strerror(errno));
     }
 
-    /* Read internal options */
-    read_internal(debug_level);
-
-    mdebug1(STARTED_MSG);
-
     /* Check if the configuration is present */
     if (File_DateofChange(cfg) < 0) {
         merror_exit(NO_CONFIG, cfg);
@@ -109,6 +104,7 @@ int main(int argc, char **argv)
         merror(RCONFIG_ERROR, SYSCHECK, cfg);
         syscheck.disabled = 1;
     } else if ((r == 1) || (syscheck.disabled == 1)) {
+        mdebug1(STARTED_MSG);
         if (!syscheck.dir) {
             if (!test_config) {
                 minfo(FIM_DIRECTORY_NOPROVIDED);

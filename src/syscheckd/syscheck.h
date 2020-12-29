@@ -135,13 +135,6 @@ cJSON *getSyscheckConfig(void);
 cJSON *getSyscheckInternalOptions(void);
 
 /**
- * @brief Read the syscheck internal options (to be deprecated)
- *
- * @param debug_level Debug level to be set in the syscheck daemon
- */
-void read_internal(int debug_level);
-
-/**
  * @brief Performs an integrity monitoring scan
  *
  */

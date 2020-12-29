@@ -49,33 +49,6 @@ void init_magic(magic_t *cookie_ptr)
 }
 #endif /* USE_MAGIC */
 
-/* Read syscheck internal options */
-void read_internal(int debug_level)
-{
-    syscheck.rt_delay = getDefine_Int("syscheck", "rt_delay", 0, 1000);
-    syscheck.max_depth = getDefine_Int("syscheck", "default_max_depth", 1, 320);
-    syscheck.file_max_size = (size_t)getDefine_Int("syscheck", "file_max_size", 0, 4095) * 1024 * 1024;
-    syscheck.sym_checker_interval = getDefine_Int("syscheck", "symlink_scan_interval", 1, 2592000);
-
-#ifndef WIN32
-    syscheck.max_audit_entries = getDefine_Int("syscheck", "max_audit_entries", 1, 4096);
-#endif
-    sys_debug_level = getDefine_Int("syscheck", "debug", 0, 2);
-
-    /* Check current debug_level
-     * Command line setting takes precedence
-     */
-    if (debug_level == 0) {
-        int debug_level = sys_debug_level;
-        while (debug_level != 0) {
-            nowDebug();
-            debug_level--;
-        }
-    }
-
-    return;
-}
-
 
 void fim_initialize() {
     // Create store data
@@ -98,10 +71,6 @@ int Start_win32_Syscheck()
     int debug_level = 0;
     int r = 0;
     char *cfg = DEFAULTCPATH;
-    /* Read internal options */
-    read_internal(debug_level);
-
-    mdebug1(STARTED_MSG);
 
     /* Check if the configuration is present */
     if (File_DateofChange(cfg) < 0) {
@@ -113,6 +82,7 @@ int Start_win32_Syscheck()
         merror(RCONFIG_ERROR, SYSCHECK, cfg);
         syscheck.disabled = 1;
     } else if ((r == 1) || (syscheck.disabled == 1)) {
+        mdebug1(STARTED_MSG);
         /* Disabled */
         if (!syscheck.dir) {
             minfo(FIM_DIRECTORY_NOPROVIDED);
